@@ -1,4 +1,4 @@
-# PortScanPy
+# Portly
 
 A lightweight, modern port scanner built in Python - designed for cybersecurity professionals, penetration testers, and network administrators.
 
