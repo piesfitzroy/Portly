@@ -1,0 +1,5 @@
+# Core dependencies
+# Note: The CLI tool has no external dependencies and uses only Python stdlib
+
+# Optional dependencies for web UI
+flask>=3.0.0

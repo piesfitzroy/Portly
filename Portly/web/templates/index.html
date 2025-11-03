@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PortScanPy - Developer Port Scanner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- IDE-style sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 6v6l4 2"/>
+                </svg>
+                <span>PortScanPy</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                    <line x1="9" y1="9" x2="9.01" y2="9"/>
+                    <line x1="15" y1="9" x2="15.01" y2="9"/>
+                </svg>
+                Scanner
+            </a>
+            <a href="#" class="nav-item disabled">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                </svg>
+                History
+            </a>
+            <a href="#" class="nav-item disabled">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M12 1v6m0 6v6M5.6 5.6l4.2 4.2m4.2 4.2l4.2 4.2M1 12h6m6 0h6M5.6 18.4l4.2-4.2m4.2-4.2l4.2-4.2"/>
+                </svg>
+                Settings
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="status-indicator">
+                <span class="status-dot"></span>
+                <span>Ready</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main content area -->
+    <main class="main-content">
+        <!-- Top bar (like IDE tabs) -->
+        <div class="top-bar">
+            <div class="tab active">
+                <span class="tab-icon">▶</span>
+                <span>scan.execute</span>
+            </div>
+        </div>
+
+        <!-- Command panel -->
+        <div class="command-panel">
+            <div class="panel-header">
+                <h2>Execute Scan</h2>
+                <div class="panel-actions">
+                    <button class="btn-icon" id="clearBtn" title="Clear results">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <form id="scanForm" class="scan-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="target">
+                            <span class="label-icon">$</span>
+                            Target
+                        </label>
+                        <input
+                            type="text"
+                            id="target"
+                            name="target"
+                            placeholder="192.168.1.10 or example.com"
+                            required
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ports">
+                            <span class="label-icon">#</span>
+                            Ports
+                        </label>
+                        <input
+                            type="text"
+                            id="ports"
+                            name="ports"
+                            placeholder="1-1024 or 22,80,443"
+                            value="1-1024"
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="timeout">
+                            <span class="label-icon">⏱</span>
+                            Timeout (s)
+                        </label>
+                        <input
+                            type="number"
+                            id="timeout"
+                            name="timeout"
+                            placeholder="0.5"
+                            value="0.5"
+                            step="0.1"
+                            min="0.1"
+                            max="10"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="workers">
+                            <span class="label-icon">⚡</span>
+                            Workers
+                        </label>
+                        <input
+                            type="number"
+                            id="workers"
+                            name="workers"
+                            placeholder="100"
+                            value="100"
+                            min="1"
+                            max="1000"
+                        >
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="scanBtn">
+                    <span class="btn-icon">▶</span>
+                    Run Scan
+                </button>
+            </form>
+        </div>
+
+        <!-- Results panel (like IDE output/terminal) -->
+        <div class="results-panel">
+            <div class="panel-header">
+                <h3>Output</h3>
+                <div class="result-meta" id="resultMeta"></div>
+            </div>
+
+            <div id="results" class="output-content">
+                <div class="empty-state">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                    <p>No scan results yet</p>
+                    <p class="hint">Enter a target and press "Run Scan" to begin</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
